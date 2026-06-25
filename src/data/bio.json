@@ -1,0 +1,41 @@
+{
+  "name": "Jagrat Gandhi",
+  "mainPhoto": "/images/img-2.png",
+  "basicInfo": [
+    { "label": "Age", "value": "24" },
+    { "label": "Contact", "value": "+91 8490848684" },
+    { "label": "Birthday", "value": "April 24, 2002 at 07:17 AM" },
+    { "label": "Height", "value": "5'11\"" },
+    { "label": "Occupation", "value": "Software Developer / QA Tester" },
+    { "label": "Education", "value": "Master in Computer Application" },
+    { "label": "Location", "value": "Padra, Vadodara" },
+    { "label": "Religion & Caste", "value": "Hindu - Kachhiya Patel" },
+    { "label": "Language", "value": "English, Hindi, Gujarati" },
+    { "label": "Hobbies", "value": " " }
+  ],
+  "familyDetails": [
+    { "label": "Father", "value": "Ranchhodbhai Gandhi, Businessman" },
+    { "label": "Father's Contact", "value": "+91 9106817707" },
+    { "label": "Mother", "value": "Hetalben Gandhi, Housewife" },
+    {
+      "label": "Address",
+      "value": "B/12, Gurukrupa Society, Opp. Paranami agarbatti Padra, Vadodara, Gujarat, India"
+    },
+    {
+      "label": "Siblings",
+      "value": "1 Elder Sisters (Married)"
+    }
+  ],
+  "galleryPhotos": [
+    "/images/img-3.jpg",
+    "/images/img-4.jpg",
+    "/images/img-5.jpg",
+    "/images/img-6.jpg",
+    "/images/img-7.jpg",
+    "/images/img-1.jpg"
+  ],
+  "socialLinks": {
+    "instagram": "https://instagram.com/_jagrat_24_4",
+    "whatsapp": "https://wa.me/918490848684"
+  }
+}

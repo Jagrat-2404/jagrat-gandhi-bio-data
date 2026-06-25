@@ -1,0 +1,314 @@
+---
+interface Props {
+  photos: string[];
+}
+const { photos } = Astro.props;
+const count = photos.length;
+---
+
+{count > 0 ? (
+  <section class="carousel">
+    <div class="carousel__nav">
+      <span class="carousel__counter" data-carousel-counter>1 / {count}</span>
+      <div class="carousel__buttons">
+        <button
+          type="button"
+          class="carousel__btn carousel__btn--prev"
+          data-carousel-prev
+          aria-label="Previous image"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          type="button"
+          class="carousel__btn carousel__btn--next"
+          data-carousel-next
+          aria-label="Next image"
+        >
+          &gt;&gt;
+        </button>
+      </div>
+    </div>
+    <div class="carousel__stack" data-carousel-stack>
+      {photos.map((src, i) => (
+        <div
+          class="carousel__card"
+          data-carousel-card
+          data-index={i}
+          style={`--stack-index: ${i}`}
+        >
+          <img src={src} alt={`Gallery ${i + 1}`} />
+        </div>
+      ))}
+    </div>
+
+    <div class="viewer" data-viewer aria-hidden="true">
+      <div class="viewer__backdrop" data-viewer-close></div>
+      <div
+        class="viewer__dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Photo viewer"
+      >
+        <button class="viewer__close" type="button" data-viewer-close aria-label="Close">
+          ×
+        </button>
+        <img class="viewer__img" data-viewer-img alt="Selected photo" />
+      </div>
+    </div>
+  </section>
+) : null}
+
+<script>
+  function initCarousel() {
+    const counter = document.querySelector<HTMLSpanElement>('[data-carousel-counter]');
+    const nextBtn = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const prevBtn = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-carousel-card]'));
+    const viewer = document.querySelector<HTMLElement>('[data-viewer]');
+    const viewerImg = document.querySelector<HTMLImageElement>('[data-viewer-img]');
+    const viewerCloseEls = Array.from(document.querySelectorAll<HTMLElement>('[data-viewer-close]'));
+
+    if (
+      !counter ||
+      !nextBtn ||
+      !prevBtn ||
+      cards.length === 0 ||
+      !viewer ||
+      !viewerImg ||
+      viewerCloseEls.length === 0
+    )
+      return;
+
+    const counterEl = counter;
+    const viewerEl = viewer;
+    const viewerImgEl = viewerImg;
+
+    const total = cards.length;
+    let current = 0;
+
+    let viewerOpen = false;
+    function openViewer(src: string, alt?: string) {
+      viewerOpen = true;
+      viewerImgEl.src = src;
+      viewerImgEl.alt = alt || 'Selected photo';
+      viewerEl.setAttribute('data-open', 'true');
+      viewerEl.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeViewer() {
+      viewerOpen = false;
+      viewerEl.removeAttribute('data-open');
+      viewerEl.setAttribute('aria-hidden', 'true');
+      viewerImgEl.removeAttribute('src');
+      document.body.style.overflow = '';
+    }
+
+    function update() {
+      cards.forEach((card) => {
+        const photoIndex = parseInt(card.getAttribute('data-index') || '0', 10);
+        const depth = (photoIndex - current + total) % total;
+        const visible = depth < 3;
+        card.style.setProperty('--translate-x', String(depth * 12));
+        card.style.setProperty('--translate-y', String(depth * 8));
+        card.style.setProperty('--scale', String(1 - depth * 0.05));
+        card.style.setProperty('--z-index', String(10 - depth));
+        card.style.opacity = visible ? '1' : '0';
+        card.style.pointerEvents = visible ? 'auto' : 'none';
+      });
+      counterEl.textContent = `${current + 1} / ${total}`;
+    }
+
+    function goNext() {
+      current = (current + 1) % total;
+      update();
+    }
+
+    function goPrev() {
+      current = (current - 1 + total) % total;
+      update();
+    }
+
+    nextBtn.addEventListener('click', goNext);
+    prevBtn.addEventListener('click', goPrev);
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const img = card.querySelector<HTMLImageElement>('img');
+        if (!img) return;
+        openViewer(img.currentSrc || img.src, img.alt);
+      });
+    });
+
+    viewerCloseEls.forEach((el) => el.addEventListener('click', closeViewer));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && viewerOpen) closeViewer();
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+    });
+
+    update();
+  }
+
+  document.addEventListener('DOMContentLoaded', initCarousel);
+</script>
+
+<style>
+  .carousel {
+    padding: var(--space-2xl) var(--space-lg);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .carousel__nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .carousel__counter {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+  }
+
+  .carousel__buttons {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  .carousel__btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+
+  .carousel__btn:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .carousel__stack {
+    position: relative;
+    height: 520px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .carousel__card {
+    position: absolute;
+    width: 90%;
+    max-width: 380px;
+    height: 460px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    cursor: zoom-in;
+    transform: translate(
+        calc(var(--translate-x, 0) * 1px),
+        calc(var(--translate-y, 0) * 1px)
+      )
+      scale(var(--scale, 1));
+    z-index: var(--z-index, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .carousel__card img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    display: block;
+  }
+
+  .viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+  }
+
+  .viewer[data-open='true'] {
+    display: block;
+  }
+
+  .viewer__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.5);
+  }
+
+  .viewer__dialog {
+    position: relative;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+    width: min(920px, calc(100vw - 2rem));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-alt);
+    overflow: hidden;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+  }
+
+  .viewer__close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: rgba(250, 249, 247, 0.95);
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .viewer__close:hover {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+
+  .viewer__img {
+    width: 100%;
+    height: min(78vh, 720px);
+    object-fit: contain;
+    background: var(--color-bg-alt);
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .carousel {
+      padding: var(--space-2xl) var(--space-2xl);
+      max-width: 520px;
+    }
+
+    .carousel__stack {
+      height: 520px;
+    }
+
+    .carousel__card img {
+      height: 100%;
+    }
+  }
+</style>

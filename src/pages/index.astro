@@ -1,0 +1,144 @@
+---
+import '../styles/global.css';
+import BioHeader from '../components/BioHeader.astro';
+import BioInfo from '../components/BioInfo.astro';
+import BioMainPhoto from '../components/BioMainPhoto.astro';
+import CardStackCarousel from '../components/CardStackCarousel.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+
+import bio from '../data/bio.json';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico?v=2" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=2" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=2" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=2" />
+    <link rel="manifest" href="/site.webmanifest?v=2" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{bio.name} | Bio Data</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <BioHeader name={bio.name} />
+
+      <main class="main">
+        <div class="main__content">
+          <div class="main__photo">
+            <BioMainPhoto src={bio.mainPhoto} alt={`${bio.name} - Profile`} />
+          </div>
+          <section class="main__info">
+            <BioInfo items={bio.basicInfo} />
+            {bio.familyDetails && bio.familyDetails.length > 0 && (
+              <div class="main__family">
+                <BioInfo items={bio.familyDetails} title="Family Details" />
+              </div>
+            )}
+            <div class="main__social">
+              <SocialLinks
+                instagram={bio.socialLinks.instagram}
+                whatsapp={bio.socialLinks.whatsapp}
+              />
+            </div>
+          </section>
+        </div>
+
+        <section class="gallery">
+          <CardStackCarousel photos={bio.galleryPhotos} />
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
+
+<style>
+  .page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(
+      to bottom,
+      #fffaf5 0%,
+      #fdf6ee 50%,
+      #fffaf5 100%
+    );
+  }
+
+  .main {
+    flex: 1;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .main__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .main__photo {
+    order: 1;
+    display: flex;
+    justify-content: center;
+    height: 500px;       
+    border-radius: 16px;
+  }
+
+  .main__info {
+    order: 2;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid #eadfce;
+    border-radius: 24px;
+    padding: 2rem;
+  }
+
+  .main__family {s
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e6d8c7;
+  }
+
+  .main__social {
+    padding-top: 1.5rem;
+  }
+
+  .gallery {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e6d8c7;
+    max-width: 1000px;
+    height: 520px;
+    object-fit: contain;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 768px) {
+    .main__content {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 3rem;
+    }
+
+    .main__photo {
+      order: 2;
+      flex: 0 0 500px;
+    }
+
+    .main__info {
+      order: 1;
+      flex: 1;
+    }
+  }
+</style>

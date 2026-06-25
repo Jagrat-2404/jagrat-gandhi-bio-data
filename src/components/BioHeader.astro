@@ -1,0 +1,31 @@
+---
+interface Props {
+  name: string;
+}
+const { name } = Astro.props;
+---
+
+<header class="bio-header">
+  <h1 class="bio-header__name">{name}</h1>
+</header>
+
+<style>
+  .bio-header {
+    padding: var(--space-xl, 1.5rem) var(--space-lg, 1rem);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .bio-header__name {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 768px) {
+    .bio-header {
+      padding: var(--space-2xl, 2rem) var(--space-2xl, 2rem);
+    }
+  }
+</style>

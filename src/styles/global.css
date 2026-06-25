@@ -1,0 +1,52 @@
+/* Matrimonial Bio - Global Styles */
+:root {
+  --color-bg: #faf9f7;
+  --color-bg-alt: #f5f4f0;
+  --color-text: #0a0a0a;
+  --color-text-muted: rgba(10, 10, 10, 0.65);
+  --color-border: rgba(0, 0, 0, 0.12);
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space-lg: 1.25rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+  }
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit:contain;
+  object-position: center top;
+}

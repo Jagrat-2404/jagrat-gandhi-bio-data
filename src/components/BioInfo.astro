@@ -1,0 +1,76 @@
+---
+interface Props {
+  items: Array<{ label: string; value: string }>;
+  title?: string;
+}
+const { items, title } = Astro.props;
+---
+
+<section class="bio-info">
+  {title && <h2 class="bio-info__title">{title}</h2>}
+  <dl class="bio-info__list">
+    {items.map((item) => (
+      <div class="bio-info__row">
+        <dt class="bio-info__label">{item.label}</dt>
+        <dd class="bio-info__value">{item.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .bio-info {
+    padding: var(--space-lg);
+  }
+
+  .bio-info__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .bio-info__row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .bio-info__row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .bio-info__label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  .bio-info__value {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .bio-info__title {
+    margin: 0 0 var(--space-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 768px) {
+    .bio-info {
+      padding: var(--space-xl) var(--space-2xl);
+    }
+  }
+</style>
